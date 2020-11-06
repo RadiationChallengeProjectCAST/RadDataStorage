@@ -23,16 +23,14 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 // client.connect();
 
 function servePage(path, res){
-    console.log("1");
     fs.readFile(path, function(err, data){
-        console.log("2");
         res.writeHead(200, {'Content-Type': 'text/html'});
         res.write(data);
         res.end();
       });
 }
 
-app.get('/api/upload_data', async (req, res) => {
+app.post('/api/upload_data', async (req, res) => {
     //Token verification
     if (req.is('json')){
         var token = req.body.token;
@@ -41,14 +39,15 @@ app.get('/api/upload_data', async (req, res) => {
         var locX = req.body.reading.location.x;
         var locY = req.body.reading.location.y;
     } else {
-        var token = req.query.token;
-        var cpm = req.query.cpm;
-        var floor = req.query.floor;
-        var locX = req.query.x;
-        var locY = req.query.y;
+        var token = req.body.token;
+        var cpm = req.body.cpm;
+        var floor = req.body.floor;
+        var locX = req.body.x;
+        var locY = req.body.y;
     }
     
     res.send (token + " | " + cpm + " | " + floor + " | " + locX + " | " + locY);
+    // res.send (req.body);
 
     // const result = await client.query({
     //     text: 'SELECT TeamID FROM Team WHERE TeamToken = $1',
