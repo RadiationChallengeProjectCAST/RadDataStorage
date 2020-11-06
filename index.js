@@ -4,7 +4,7 @@ var tokens = JSON.parse(fs.readFileSync('tokens.json', 'utf8'));
 const express = require('express')
 const app = express()
 const port = 3000
-const HTMLDir = ''
+const HTMLDir = 'pages/'
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // support json encoded bodies
@@ -21,11 +21,15 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 // 
 // client.connect();
 
-function servePage(){
-
+function servePage(path, res){
+    console.log("1");
+    fs.readFile(path, function(err, data){
+        console.log("2");
+        res.writeHead(200, {'Content-Type': 'text/html'});
+        res.write(data);
+        res.end();
+      });
 }
-
-
 
 app.post('/api/upload_data', async (req, res) => {
     //Token verification
@@ -64,13 +68,14 @@ app.post('/api/upload_data', async (req, res) => {
     
 })
 
-app.get('record', (req, res) => {
-    //Serve record.html
-    fs.readFile("pages/record.html", function(err, data){
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        res.write(data);
-        res.end();
-      });
+app.get('/record', (req, res) => {
+    // Serve record.html
+    // fs.readFile("pages/record.html", function(err, data){
+    //     res.writeHead(200, {'Content-Type': 'text/html'});
+    //     res.write(data);
+    //     res.end();
+    //   });
+    servePage(HTMLDir+'record.html', res);
 })
 
 app.listen(port, () => {
