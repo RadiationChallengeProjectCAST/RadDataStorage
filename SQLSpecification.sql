@@ -17,8 +17,17 @@ CREATE TABLE team (
     teamname VARCHAR(32)
 );
 
+-- CREATE TABLE apilog (
+--     logid SERIAL PRIMARY KEY,
+--     readingid INTEGER,
+--     logtimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
+
 INSERT INTO reading (teamid, posfloor, posx, posy, cpm)
     VALUES ([TeamID], [PosFloor], [PosX], [PosY], [CPM]);
 
 INSERT INTO team (teamtoken, teamname)
     VALUES ([TeamToken], [TeamName]);
+
+-- INSERT INTO apilog (readingid)
+--     VALUES ([readingid]);

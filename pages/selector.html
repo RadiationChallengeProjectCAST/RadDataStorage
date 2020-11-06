@@ -1,0 +1,60 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Coordinate Selector</title>
+  <meta name="description" content="Yeah">
+  <meta name="author" content="Me">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="css/selector.css">
+  <link rel="stylesheet" href="../node_modules/bulma/css/bulma.css">
+</head>
+
+<body>
+    <section class="section">
+        <div class="container">
+          <h1 class="title">
+            Manual Data Entry form
+          </h1>
+          <p class="subtitle">
+            <form action="/api/upload_data" method="POST">
+                Token:<br>
+                <input type="text" name="token"><br>
+                <br>
+            
+                CPM:<br>
+                <input type="text" name="cpm"><br>
+                <br>
+            
+                X Position:<br>
+                <input id="inputX" type="text" name="x"><br>
+                <br>
+            
+                Y Position:<br>
+                <input id="inputY" type="text" name="y"><br>
+                <br>
+            
+                Floor:<br>
+                <input type="text" name="floor" list="floors" placeholder="1, 2 or 3"><br>
+                <datalist id="floors">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                </datalist>
+            
+                <input type="submit" value="Submit">
+            </form>
+          </p>
+        </div>
+      </section>
+      <section class="section"> <canvas id="imageCanvas" style="border:1px solid #d3d3d3;">
+       
+    </canvas></section>
+   
+   
+  <script src="js/selector.js"></script>
+</body>
+</html>
