@@ -9,7 +9,8 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
-const { Pool } = require('pg')
+const { Pool } = require('pg');
+const { query } = require('express');
 const client = new Pool({
     user: "raddbaccess",
     host: "localhost",
@@ -59,8 +60,16 @@ app.post('/api/upload_data', async (req, res) => {
 });
 
 app.get('/api/readings', async (req, res) => {
+
+    queryText = 'SELECT * FROM reading JOIN team ON reading.teamid = team.teamid'
+
+    if (req.query.teamid) {
+        var TeamID = req.query.teamID;
+        queryText = "SELECT * FROM reading JOIN team on reading.teamid = team.teamid WHERE teamid = " + teamID
+    }
+
     const result = await client.query({
-        text: 'SELECT * FROM reading JOIN team ON reading.teamid = team.teamid'
+        text: queryText
     })
 
     let response = new Array();
