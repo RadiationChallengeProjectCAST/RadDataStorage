@@ -57,7 +57,7 @@ app.post('/api/upload_data', async (req, res) => {
     
 })
 
-app.get('/record', (req, res) => {
+app.get('/pages/record', (req, res) => {
     //Serve record.html
     fs.readFile("record.html", function(err, data){
         res.writeHead(200, {'Content-Type': 'text/html'});
