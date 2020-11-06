@@ -23,9 +23,7 @@ const client = new Pool({
 client.connect();
 
 function servePage(path, res){
-    console.log("1");
     fs.readFile(path, function(err, data){
-        console.log("2");
         res.writeHead(200, {'Content-Type': 'text/html'});
         res.write(data);
         res.end();
@@ -34,7 +32,22 @@ function servePage(path, res){
 
 app.post('/api/upload_data', async (req, res) => {
     //Token verification
-    var token = req.body.token;
+    if (req.is('json')){
+        var token = req.body.token;
+        var cpm = req.body.reading.cpm;
+        var floor = req.body.reading.location.floor;
+        var locX = req.body.reading.location.x;
+        var locY = req.body.reading.location.y;
+    } else {
+        var token = req.body.token;
+        var cpm = req.body.cpm;
+        var floor = req.body.floor;
+        var locX = req.body.x;
+        var locY = req.body.y;
+    }
+    
+    // res.send (token + " | " + cpm + " | " + floor + " | " + locX + " | " + locY); //---DEBUG---
+    // res.send (req.body); //---DEBUG---
 
     const result = await client.query({
         text: 'SELECT TeamID FROM Team WHERE TeamToken = $1',
@@ -45,12 +58,8 @@ app.post('/api/upload_data', async (req, res) => {
         res.send("Invalid token.")
         return;
     }
-    let teamID = result.rows[0].teamid
-
-    let cpm = req.body.reading.cpm;
-    let floor = req.body.reading.location.floor;
-    let locX = req.body.reading.location.x;
-    let locY = req.body.reading.location.y;
+    
+    let teamID = result.rows[0].teamid;
 
     var insertQuery = "INSERT INTO reading (teamid, posfloor, posx, posy, cpm) VALUES ($1, $2, $3, $4, $5);"
     var values = [teamID, floor, locX, locY, cpm]
