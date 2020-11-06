@@ -8,17 +8,17 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 
 app.post('/api/upload_data', (req, res) => {
-  //Token verification
-  var token = req.body.id;
+    //Token verification
+    var token = req.body.id;
 
-  var cpm = req.body.reading.cpm; 
-  var floor = req.body.reading.location.floor;
-  var locX = req.body.reading.location.x; 
-  var locY = req.body.reading.location.y;
+    var cpm = req.body.reading.cpm;
+    var floor = req.body.reading.location.floor;
+    var locX = req.body.reading.location.x;
+    var locY = req.body.reading.location.y;
 
-  res.send("Data submitted sucessfully. cpm: "+cpm);
+    res.send("Data submitted sucessfully. cpm: " + cpm + " floor: " + floor + " locX:" + locX + " locY:" + locY);
 })
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+    console.log(`Example app listening at http://localhost:${port}`)
 })
