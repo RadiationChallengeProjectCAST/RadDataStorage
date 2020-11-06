@@ -32,41 +32,51 @@ function servePage(path, res){
       });
 }
 
-app.post('/api/upload_data', async (req, res) => {
+app.get('/api/upload_data', async (req, res) => {
     //Token verification
-    var token = req.body.token;
-
-    const result = await client.query({
-        text: 'SELECT TeamID FROM Team WHERE TeamToken = $1',
-        values: [token],
-    })
-
-    if (result.rowCount == 0) {
-        res.send("Invalid token.")
-        return;
+    if (req.query.format == 'json'){
+        var token = req.body.token;
+        var cpm = req.body.reading.cpm;
+        var floor = req.body.reading.location.floor;
+        var locX = req.body.reading.location.x;
+        var locY = req.body.reading.location.y;
+    } else {
+        var token = req.query.token;
+        var cpm = req.query.cpm;
+        var floor = req.query.floor;
+        var locX = req.query.x;
+        var locY = req.query.y;
     }
-    let teamID = result.rows[0].teamid
+    
+    res.send (token + " | " + cpm + " | " + floor + " | " + locX + " | " + locY);
 
-    let cpm = req.body.reading.cpm;
-    let floor = req.body.reading.location.floor;
-    let locX = req.body.reading.location.x;
-    let locY = req.body.reading.location.y;
+    // const result = await client.query({
+    //     text: 'SELECT TeamID FROM Team WHERE TeamToken = $1',
+    //     values: [token],
+    // })
 
-    var insertQuery = "INSERT INTO reading (teamid, posfloor, posx, posy, cpm) VALUES ($1, $2, $3, $4, $5);"
-    var values = [teamID, floor, locX, locY, cpm]
+    // if (result.rowCount == 0) {
+    //     res.send("Invalid token.")
+    //     return;
+    // }
+    
+    // let teamID = result.rows[0].teamid;
 
-    try {
-        await client.query('BEGIN')
-        const response = await client.query(insertQuery, values)
-        console.log(response.rows[0])
-        res.send("Data submitted sucessfully. cpm: " + cpm + " floor: " + floor + " locX: " + locX + " locY: " + locY + "teamID: " + teamID);
-        await client.query('COMMIT')
+    // var insertQuery = "INSERT INTO reading (teamid, posfloor, posx, posy, cpm) VALUES ($1, $2, $3, $4, $5);"
+    // var values = [teamID, floor, locX, locY, cpm]
 
-    } catch (err) {
-        console.log(err.stack)
-        res.send("Error commiting to db.");
-        await client.query('ROLLBACK')
-    }
+    // try {
+    //     await client.query('BEGIN')
+    //     const response = await client.query(insertQuery, values)
+    //     console.log(response.rows[0])
+    //     res.send("Data submitted sucessfully. cpm: " + cpm + " floor: " + floor + " locX: " + locX + " locY: " + locY + "teamID: " + teamID);
+    //     await client.query('COMMIT')
+
+    // } catch (err) {
+    //     console.log(err.stack)
+    //     res.send("Error commiting to db.");
+    //     await client.query('ROLLBACK')
+    // }
     
 });
 
