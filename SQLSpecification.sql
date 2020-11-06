@@ -1,3 +1,6 @@
+CREATE ROLE raddbaccess WITH LOGIN PASSWORD 'PUT_DB_PASSWORD_HERE';
+CREATE DATABASE radiationdb OWNER raddbaccess;
+
 CREATE TABLE Reading (
     ReadingID SERIAL PRIMARY KEY,
     TeamID VARCHAR(8),
