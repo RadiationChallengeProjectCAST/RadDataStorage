@@ -10,17 +10,17 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
-// const { Pool } = require('pg');
-// const { query } = require('express');
-// const client = new Pool({
-//     user: "raddbaccess",
-//     host: "localhost",
-//     database: "radiationdb",
-//     password: tokens.DBPassword,
-//     port: "5432"
-// });
+const { Pool } = require('pg');
+const { query } = require('express');
+const client = new Pool({
+    user: "raddbaccess",
+    host: "localhost",
+    database: "radiationdb",
+    password: tokens.DBPassword,
+    port: "5432"
+});
 
-// client.connect();
+client.connect();
 
 function servePage(path, res){
     fs.readFile(path, function(err, data){
@@ -46,36 +46,36 @@ app.post('/api/upload_data', async (req, res) => {
         var locY = req.body.y;
     }
     
-    res.send (token + " | " + cpm + " | " + floor + " | " + locX + " | " + locY);
-    // res.send (req.body);
+    // res.send (token + " | " + cpm + " | " + floor + " | " + locX + " | " + locY); //---DEBUG---
+    // res.send (req.body); //---DEBUG---
 
-    // const result = await client.query({
-    //     text: 'SELECT TeamID FROM Team WHERE TeamToken = $1',
-    //     values: [token],
-    // })
+    const result = await client.query({
+        text: 'SELECT TeamID FROM Team WHERE TeamToken = $1',
+        values: [token],
+    })
 
-    // if (result.rowCount == 0) {
-    //     res.send("Invalid token.")
-    //     return;
-    // }
+    if (result.rowCount == 0) {
+        res.send("Invalid token.")
+        return;
+    }
     
-    // let teamID = result.rows[0].teamid;
+    let teamID = result.rows[0].teamid;
 
-    // var insertQuery = "INSERT INTO reading (teamid, posfloor, posx, posy, cpm) VALUES ($1, $2, $3, $4, $5);"
-    // var values = [teamID, floor, locX, locY, cpm]
+    var insertQuery = "INSERT INTO reading (teamid, posfloor, posx, posy, cpm) VALUES ($1, $2, $3, $4, $5);"
+    var values = [teamID, floor, locX, locY, cpm]
 
-    // try {
-    //     await client.query('BEGIN')
-    //     const response = await client.query(insertQuery, values)
-    //     console.log(response.rows[0])
-    //     res.send("Data submitted sucessfully. cpm: " + cpm + " floor: " + floor + " locX: " + locX + " locY: " + locY + "teamID: " + teamID);
-    //     await client.query('COMMIT')
+    try {
+        await client.query('BEGIN')
+        const response = await client.query(insertQuery, values)
+        console.log(response.rows[0])
+        res.send("Data submitted sucessfully. cpm: " + cpm + " floor: " + floor + " locX: " + locX + " locY: " + locY + "teamID: " + teamID);
+        await client.query('COMMIT')
 
-    // } catch (err) {
-    //     console.log(err.stack)
-    //     res.send("Error commiting to db.");
-    //     await client.query('ROLLBACK')
-    // }
+    } catch (err) {
+        console.log(err.stack)
+        res.send("Error commiting to db.");
+        await client.query('ROLLBACK')
+    }
     
 });
 
