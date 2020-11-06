@@ -1,3 +1,6 @@
+var fs = require('fs');
+var tokens = JSON.parse(fs.readFileSync('file', 'utf8'));
+
 const express = require('express')
 const app = express()
 const port = 3000
@@ -6,6 +9,16 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
+const { Pool } = require('pg')
+const client = new Pool({
+    user: "radDbAccess",
+    host: "localhost",
+    database: "radiationDb",
+    password: token.password,
+    port: "5432"    
+  });
+
+client.connect();
 
 app.post('/api/upload_data', (req, res) => {
     //Token verification
