@@ -1,24 +1,24 @@
 CREATE ROLE raddbaccess WITH LOGIN PASSWORD 'PUT_DB_PASSWORD_HERE';
 CREATE DATABASE radiationdb OWNER raddbaccess;
 
-CREATE TABLE Reading (
-    ReadingID SERIAL PRIMARY KEY,
-    TeamID VARCHAR(8),
-    PosFloor INT,
-    PosX DECIMAL,
-    PosY DECIMAL,
-    CPM DECIMAL,
-    DateTimeRecorded TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE reading (
+    readingid SERIAL PRIMARY KEY,
+    teamid INT,
+    posfloor INT,
+    posx DECIMAL,
+    posy DECIMAL,
+    cpm DECIMAL,
+    datetimerecorded TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE Team (
-    TeamID SERIAL PRIMARY KEY,
-    TeamToken VARCHAR(32),
-    TeamName VARCHAR(32)
+CREATE TABLE team (
+    teamid SERIAL PRIMARY KEY,
+    teamtoken VARCHAR(32),
+    teamname VARCHAR(32)
 );
 
-INSERT INTO Reading (TeamID, PosFloor, PosX, PosY, CPM)
+INSERT INTO reading (teamid, posfloor, posx, posy, cpm)
     VALUES ([TeamID], [PosFloor], [PosX], [PosY], [CPM]);
 
-INSERT INTO Team (TeamToken, TeamName)
+INSERT INTO team (teamtoken, teamname)
     VALUES ([TeamToken], [TeamName]);
