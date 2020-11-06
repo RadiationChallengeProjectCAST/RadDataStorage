@@ -1,0 +1,11 @@
+{
+    "key" : 1,
+    "reading" : {
+        "cpm" : 21,
+        "location": {
+            "floor" : 1,
+            "x" : 0,
+            "y": 1
+        }
+    }
+}
