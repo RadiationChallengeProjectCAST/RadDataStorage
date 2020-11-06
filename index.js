@@ -34,7 +34,7 @@ function servePage(path, res){
 
 app.get('/api/upload_data', async (req, res) => {
     //Token verification
-    if (req.query.format == 'json'){
+    if (req.is('json')){
         var token = req.body.token;
         var cpm = req.body.reading.cpm;
         var floor = req.body.reading.location.floor;
