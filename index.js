@@ -82,7 +82,7 @@ app.get('/api/readings', async (req, res) => {
     res.send(response);
 });
 
-app.get('/record', (req, res) => {
+app.get('/pages/record', (req, res) => {
     //Serve record.html
     fs.readFile("record.html", function(err, data){
         res.writeHead(200, {'Content-Type': 'text/html'});
