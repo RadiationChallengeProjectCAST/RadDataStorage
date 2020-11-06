@@ -1,0 +1,15 @@
+CREATE TABLE Reading (
+    ReadingID PRIMARY KEY INTEGER,
+    TeamID VARCHAR(8),
+    PosFloor INT,
+    PosX DECIMAL,
+    PosY DECIMAL,
+    CPM DECIMAL,
+    DateTimeRecorded TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Team (
+    TeamID PRIMARY KEY VARCHAR(8),
+    TeamToken VARCHAR(32),
+    TeamName VARCHAR(32)
+);
