@@ -1,5 +1,5 @@
 CREATE TABLE Reading (
-    ReadingID PRIMARY KEY INTEGER,
+    ReadingID SERIAL PRIMARY KEY,
     TeamID VARCHAR(8),
     PosFloor INT,
     PosX DECIMAL,
@@ -9,7 +9,13 @@ CREATE TABLE Reading (
 );
 
 CREATE TABLE Team (
-    TeamID PRIMARY KEY VARCHAR(8),
+    TeamID SERIAL PRIMARY KEY,
     TeamToken VARCHAR(32),
     TeamName VARCHAR(32)
 );
+
+INSERT INTO Reading (TeamID, PosFloor, PosX, PosY, CPM)
+    VALUES ([TeamID], [PosFloor], [PosX], [PosY], [CPM]);
+
+INSERT INTO Team (TeamToken, TeamName)
+    VALUES ([TeamToken], [TeamName]);
