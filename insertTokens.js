@@ -10,27 +10,15 @@ const client = new Pool({
     port: "5432"
 });
 
+
 client.connect();
-try {
-    await client.query("BEGIN")
-    tokens.teams.forEach(element => {
-        var response = await client.query({
+
+tokens.teams.forEach(
+    element => {
+        var response = client.query({
             text: 'INSERT INTO Team(teamtoken, teamname) VALUES($1, $2)',
             values: [element.token, element.teamName]
-        })
-        console.log(response)
+        }).catch(e => console.error(e.stack))
     });
-    client.query("COMMIT")
-} catch (error) {
-    console.log(error)
-    await client.query("ROLLBACK")
-}
 
-var stdin = process.openStdin(); 
-require('tty').setRawMode(true);    
 
-console.log('Press any key to exit');
-
-process.stdin.setRawMode(true);
-process.stdin.resume();
-process.stdin.on('data', process.exit.bind(process, 0));
