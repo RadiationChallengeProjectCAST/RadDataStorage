@@ -10,16 +10,16 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
-// const { Pool } = require('pg')
-// const client = new Pool({
-//     user: "raddbaccess",
-//     host: "localhost",
-//     database: "radiationdb",
-//     password: tokens.DBPassword,
-//     port: "5432"
-// });
-// 
-// client.connect();
+const { Pool } = require('pg')
+const client = new Pool({
+    user: "raddbaccess",
+    host: "localhost",
+    database: "radiationdb",
+    password: tokens.DBPassword,
+    port: "5432"
+});
+
+client.connect();
 
 function servePage(path, res){
     console.log("1");
@@ -70,11 +70,6 @@ app.post('/api/upload_data', async (req, res) => {
 
 app.get('/record', (req, res) => {
     // Serve record.html
-    // fs.readFile("pages/record.html", function(err, data){
-    //     res.writeHead(200, {'Content-Type': 'text/html'});
-    //     res.write(data);
-    //     res.end();
-    //   });
     servePage(HTMLDir+'record.html', res);
 })
 
