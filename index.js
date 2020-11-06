@@ -1,22 +1,27 @@
+const dotenv = require('dotenv');
+dotenv.config();
+
 var fs = require('fs');
 var tokens = JSON.parse(fs.readFileSync('tokens.json', 'utf8'));
 
 const express = require('express')
 const app = express()
-const port = 3000
+const port = process.env.port || 3000
 const HTMLDir = 'pages/'
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
+console.log(process.env.NODE_ENV);
+
 const { Pool } = require('pg');
 const { query } = require('express');
 const client = new Pool({
-    user: "raddbaccess",
+    user: tokens.DBUserName,
     host: "localhost",
-    database: "radiationdb",
-    password: tokens.DBPassword,
+    database: tokens.DBName,
+    password: tokens.DBUserPassword,
     port: "5432"
 });
 
@@ -84,8 +89,8 @@ app.get('/api/readings', async (req, res) => {
     queryText = 'SELECT * FROM reading JOIN team ON reading.teamid = team.teamid'
 
     if (req.query.teamid) {
-        var TeamID = req.query.teamID;
-        queryText = "SELECT * FROM reading JOIN team on reading.teamid = team.teamid WHERE teamid = " + teamID
+        var TeamID = req.query.teamid;
+        queryText = "SELECT * FROM reading JOIN team on reading.teamid = team.teamid WHERE reading.teamid = " + TeamID
     }
 
     const result = await client.query({
@@ -94,6 +99,10 @@ app.get('/api/readings', async (req, res) => {
 
     let response = new Array();
     result.rows.forEach(function(reading) {
+        if(process.env.NODE_ENV == 'production' && reading.teamtoken == "TEST_TOKEN_FOR_TEST_TOKEN")
+        {
+            return;
+        }
         response.push({
             "teamid" : reading.teamid,
             "teamname": reading.teamname,
