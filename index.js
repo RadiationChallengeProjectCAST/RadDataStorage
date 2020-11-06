@@ -57,6 +57,15 @@ app.post('/api/upload_data', async (req, res) => {
     
 })
 
+app.get('/record', (req, res) => {
+    //Serve record.html
+    fs.readFile("record.html", function(err, data){
+        res.writeHead(200, {'Content-Type': 'text/html'});
+        res.write(data);
+        res.end();
+      });
+})
+
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
 })
