@@ -4,6 +4,7 @@ var tokens = JSON.parse(fs.readFileSync('tokens.json', 'utf8'));
 const express = require('express')
 const app = express()
 const port = 3000
+const HTMLDir = 'pages/'
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // support json encoded bodies
@@ -20,6 +21,16 @@ const client = new Pool({
 });
 
 client.connect();
+
+function servePage(path, res){
+    console.log("1");
+    fs.readFile(path, function(err, data){
+        console.log("2");
+        res.writeHead(200, {'Content-Type': 'text/html'});
+        res.write(data);
+        res.end();
+      });
+}
 
 app.post('/api/upload_data', async (req, res) => {
     //Token verification
@@ -91,13 +102,9 @@ app.get('/api/readings', async (req, res) => {
     res.send(response);
 });
 
-app.get('/pages/record', (req, res) => {
-    //Serve record.html
-    fs.readFile("record.html", function(err, data){
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        res.write(data);
-        res.end();
-      });
+app.get('/record', (req, res) => {
+    // Serve record.html
+    servePage(HTMLDir+'record.html', res);
 })
 
 app.listen(port, () => {
