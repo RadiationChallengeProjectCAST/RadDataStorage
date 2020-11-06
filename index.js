@@ -4,21 +4,28 @@ var tokens = JSON.parse(fs.readFileSync('tokens.json', 'utf8'));
 const express = require('express')
 const app = express()
 const port = 3000
+const HTMLDir = ''
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
-const { Pool } = require('pg')
-const client = new Pool({
-    user: "raddbaccess",
-    host: "localhost",
-    database: "radiationdb",
-    password: tokens.DBPassword,
-    port: "5432"
-});
+// const { Pool } = require('pg')
+// const client = new Pool({
+//     user: "raddbaccess",
+//     host: "localhost",
+//     database: "radiationdb",
+//     password: tokens.DBPassword,
+//     port: "5432"
+// });
+// 
+// client.connect();
 
-client.connect();
+function servePage(){
+
+}
+
+
 
 app.post('/api/upload_data', async (req, res) => {
     //Token verification
@@ -57,9 +64,9 @@ app.post('/api/upload_data', async (req, res) => {
     
 })
 
-app.get('/pages/record', (req, res) => {
+app.get('record', (req, res) => {
     //Serve record.html
-    fs.readFile("record.html", function(err, data){
+    fs.readFile("pages/record.html", function(err, data){
         res.writeHead(200, {'Content-Type': 'text/html'});
         res.write(data);
         res.end();
