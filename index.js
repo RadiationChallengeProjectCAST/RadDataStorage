@@ -10,17 +10,17 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
-const { Pool } = require('pg');
-const { query } = require('express');
-const client = new Pool({
-    user: "raddbaccess",
-    host: "localhost",
-    database: "radiationdb",
-    password: tokens.DBPassword,
-    port: "5432"
-});
+// const { Pool } = require('pg');
+// const { query } = require('express');
+// const client = new Pool({
+//     user: "raddbaccess",
+//     host: "localhost",
+//     database: "radiationdb",
+//     password: tokens.DBPassword,
+//     port: "5432"
+// });
 
-client.connect();
+// client.connect();
 
 function servePage(path, res){
     console.log("1");
