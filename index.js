@@ -14,7 +14,7 @@ const client = new Pool({
     user: "raddbaccess",
     host: "localhost",
     database: "radiationdb",
-    password: tokens.password,
+    password: tokens.DBPassword,
     port: "5432"
 });
 
@@ -45,8 +45,8 @@ app.post('/api/upload_data', async (req, res) => {
 
     try {
         await client.query('BEGIN')
-        const res = await client.query(text, values)
-        console.log(res.rows[0])
+        const response = await client.query(text, values)
+        console.log(response.rows[0])
         res.send("Data submitted sucessfully. cpm: " + cpm + " floor: " + floor + " locX: " + locX + " locY: " + locY + "teamID: " + teamID);
         await client.query('COMMIT')
     } catch (err) {
