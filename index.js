@@ -1,5 +1,5 @@
 var fs = require('fs');
-var tokens = JSON.parse(fs.readFileSync('file', 'utf8'));
+var tokens = JSON.parse(fs.readFileSync('tokens.json', 'utf8'));
 
 const express = require('express')
 const app = express()
@@ -11,16 +11,16 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 const { Pool } = require('pg')
 const client = new Pool({
-    user: "radDbAccess",
+    user: "raddbaccess",
     host: "localhost",
-    database: "radiationDb",
-    password: token.password,
+    database: "radiationdb",
+    password: tokens.password,
     port: "5432"
 });
 
 client.connect();
 
-app.post('/api/upload_data', (req, res) => {
+app.post('/api/upload_data', async (req, res) => {
     //Token verification
     var token = req.body.id;
 
@@ -40,7 +40,21 @@ app.post('/api/upload_data', (req, res) => {
     var locX = req.body.reading.location.x;
     var locY = req.body.reading.location.y;
 
-    res.send("Data submitted sucessfully. cpm: " + cpm + " floor: " + floor + " locX: " + locX + " locY: " + locY + "teamID: " + teamID);
+    var insertQuery = "INSERT INTO Reading (TeamID, PosFloor, PosX, PosY, CPM) VALUES ($1, $2, $3, $4, $5);"
+    var values = [teamIID, floor, locX, locY, cpm]
+
+    try {
+        await client.query('BEGIN')
+        const res = await client.query(text, values)
+        console.log(res.rows[0])
+        res.send("Data submitted sucessfully. cpm: " + cpm + " floor: " + floor + " locX: " + locX + " locY: " + locY + "teamID: " + teamID);
+        await client.query('COMMIT')
+    } catch (err) {
+        console.log(err.stack)
+        res.send("Error commiting to db.");
+        await client.query('ROLLBACK')
+    }
+    
 })
 
 app.listen(port, () => {
