@@ -3,6 +3,7 @@ dotenv.config();
 
 var fs = require('fs');
 var tokens = JSON.parse(fs.readFileSync('tokens.json', 'utf8'));
+var replicationRemotes = JSON.parse(fs.readFileSync('replication.json', 'utf8'));
 
 const express = require('express')
 const app = express()
@@ -27,17 +28,34 @@ const client = new Pool({
 
 client.connect();
 
-function servePage(path, res){
-    fs.readFile(path, function(err, data){
-        res.writeHead(200, {'Content-Type': 'text/html'});
+const axios = require('axios');
+
+function servePage(path, res) {
+    fs.readFile(path, function (err, data) {
+        res.writeHead(200, { 'Content-Type': 'text/html' });
         res.write(data);
         res.end();
-      });
+    });
 }
 
 app.post('/api/upload_data', async (req, res) => {
+    console.log("Recived Reading POST")
+
+    //Replicates request to other servers specifed in replication.json
+    if (req.body.replicated != true) {
+        var replicationReq = req.body;
+        replicationReq.replicated = true;
+
+        replicationRemotes.forEach(x => {
+            axios.post(x.host + '/api/upload_data',
+                req.body).catch(function (error) {
+                    console.log(error);
+                });
+        })
+    }
+
     //Token verification
-    if (req.is('json')){
+    if (req.is('json')) {
         var token = req.body.token;
         var cpm = req.body.reading.cpm;
         var floor = req.body.reading.location.floor;
@@ -50,7 +68,7 @@ app.post('/api/upload_data', async (req, res) => {
         var locX = req.body.x;
         var locY = req.body.y;
     }
-    
+
     // res.send (token + " | " + cpm + " | " + floor + " | " + locX + " | " + locY); //---DEBUG---
     // res.send (req.body); //---DEBUG---
 
@@ -64,7 +82,7 @@ app.post('/api/upload_data', async (req, res) => {
         res.send("Invalid token.")
         return;
     }
-    
+
     let teamID = result.rows[0].teamid;
 
     var insertQuery = "INSERT INTO reading (teamid, posfloor, posx, posy, cpm) VALUES ($1, $2, $3, $4, $5);"
@@ -76,6 +94,7 @@ app.post('/api/upload_data', async (req, res) => {
         console.log(response.rows[0])
 
         res.status(201);
+
         res.send("Data submitted sucessfully. cpm: " + cpm + " floor: " + floor + " locX: " + locX + " locY: " + locY + "teamID: " + teamID);
         await client.query('COMMIT')
 
@@ -86,7 +105,9 @@ app.post('/api/upload_data', async (req, res) => {
         res.send("Error commiting to db.");
         await client.query('ROLLBACK')
     }
-    
+
+
+
 });
 
 app.get('/api/validateToken', async (req, res) => {
@@ -128,15 +149,14 @@ app.get('/api/readings', async (req, res) => {
     })
 
     let response = new Array();
-    result.rows.forEach(function(reading) {
-        if(process.env.NODE_ENV == 'production' && reading.teamtoken == "TEST_TOKEN_FOR_TEST_TOKEN")
-        {
+    result.rows.forEach(function (reading) {
+        if (process.env.NODE_ENV == 'production' && reading.teamtoken == "TEST_TOKEN_FOR_TEST_TOKEN") {
             return;
         }
         response.push({
-            "teamid" : reading.teamid,
+            "teamid": reading.teamid,
             "teamname": reading.teamname,
-            "reading" : {
+            "reading": {
                 "cpm": reading.cpm,
                 "location": {
                     "floor": reading.posfloor,
@@ -152,7 +172,7 @@ app.get('/api/readings', async (req, res) => {
 
 app.get('/record', (req, res) => {
     // Serve record.html
-    servePage(HTMLDir+'record.html', res);
+    servePage(HTMLDir + 'record.html', res);
 })
 
 app.get('/validatetoken', (req, res) => {
