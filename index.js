@@ -1,29 +1,33 @@
 const dotenv = require('dotenv');
+
 dotenv.config();
 
-var fs = require('fs');
-var tokens = JSON.parse(fs.readFileSync('tokens.json', 'utf8'));
-var replicationRemotes = JSON.parse(fs.readFileSync('replication.json', 'utf8'));
+const fs = require('fs');
 
-const express = require('express')
-const app = express()
-const port = process.env.port || 3000
-const HTMLDir = 'pages/'
+const tokens = JSON.parse(fs.readFileSync('tokens.json', 'utf8'));
+const replicationRemotes = JSON.parse(fs.readFileSync('replication.json', 'utf8'));
 
-var bodyParser = require('body-parser');
+const express = require('express');
+
+const app = express();
+const port = process.env.port || 3000;
+const HTMLDir = 'pages/';
+
+const bodyParser = require('body-parser');
+
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 console.log(process.env.NODE_ENV);
 
 const { Pool } = require('pg');
-const { query } = require('express');
+
 const client = new Pool({
     user: tokens.DBUserName,
-    host: "localhost",
+    host: 'localhost',
     database: tokens.DBName,
     password: tokens.DBUserPassword,
-    port: "5432"
+    port: '5432',
 });
 
 client.connect();
@@ -31,7 +35,7 @@ client.connect();
 const axios = require('axios');
 
 function servePage(path, res) {
-    fs.readFile(path, function (err, data) {
+    fs.readFile(path, (err, data) => {
         res.writeHead(200, { 'Content-Type': 'text/html' });
         res.write(data);
         res.end();
@@ -39,34 +43,42 @@ function servePage(path, res) {
 }
 
 app.post('/api/upload_data', async (req, res) => {
-    console.log("Recived Reading POST")
+    console.log('Received Reading POST');
 
-    //Replicates request to other servers specifed in replication.json
-    if (req.body.replicated != true) {
-        var replicationReq = req.body;
+    // Replicates request to other servers specifed in replication.json
+    if (req.body.replicated !== true) {
+        const replicationReq = req.body;
         replicationReq.replicated = true;
 
-        replicationRemotes.forEach(x => {
-            axios.post(x.host + '/api/upload_data',
-                req.body).catch(function (error) {
-                    console.log(error);
-                });
-        })
+        replicationRemotes.forEach((x) => {
+            axios.post(`${x.host}/api/upload_data`,
+                req.body).catch((error) => {
+                console.log(error);
+            });
+        });
     }
 
-    //Token verification
+    let token;
+    let cpm;
+    let floor;
+    let locX;
+    let locY;
+
+    // Token verification
     if (req.is('json')) {
-        var token = req.body.token;
-        var cpm = req.body.reading.cpm;
-        var floor = req.body.reading.location.floor;
-        var locX = req.body.reading.location.x;
-        var locY = req.body.reading.location.y;
+        token = req.body.token;
+        cpm = req.body.reading.cpm;
+        floor = req.body.reading.location.floor;
+        locX = req.body.reading.location.x;
+        locY = req.body.reading.location.y;
     } else {
-        var token = req.body.token;
-        var cpm = req.body.cpm;
-        var floor = req.body.floor;
-        var locX = req.body.x;
-        var locY = req.body.y;
+        ({
+            token,
+            cpm,
+            floor,
+            locX,
+            locY,
+        } = req.body);
     }
 
     // res.send (token + " | " + cpm + " | " + floor + " | " + locX + " | " + locY); //---DEBUG---
@@ -75,96 +87,90 @@ app.post('/api/upload_data', async (req, res) => {
     const result = await client.query({
         text: 'SELECT teamid FROM team WHERE teamtoken = $1',
         values: [token],
-    })
+    });
 
-    if (result.rowCount == 0) {
+    if (result.rowCount === 0) {
         res.status(422);
-        res.send("Invalid token.")
+        res.send('Invalid token.');
         return;
     }
 
-    let teamID = result.rows[0].teamid;
+    const teamID = result.rows[0].teamid;
 
-    var insertQuery = "INSERT INTO reading (teamid, posfloor, posx, posy, cpm) VALUES ($1, $2, $3, $4, $5);"
-    var values = [teamID, floor, locX, locY, cpm]
+    const insertQuery = 'INSERT INTO reading (teamid, posfloor, posx, posy, cpm) VALUES ($1, $2, $3, $4, $5);';
+    const values = [teamID, floor, locX, locY, cpm];
 
     try {
-        await client.query('BEGIN')
-        const response = await client.query(insertQuery, values)
-        console.log(response.rows[0])
+        await client.query('BEGIN');
+        const response = await client.query(insertQuery, values);
+        console.log(response.rows[0]);
 
         res.status(201);
 
-        res.send("Data submitted sucessfully. cpm: " + cpm + " floor: " + floor + " locX: " + locX + " locY: " + locY + "teamID: " + teamID);
-        await client.query('COMMIT')
-
+        res.send(`Data submitted sucessfully. cpm: ${cpm} floor: ${floor} locX: ${locX} locY: ${locY}teamID: ${teamID}`);
+        await client.query('COMMIT');
     } catch (err) {
-        console.log(err.stack)
+        console.log(err.stack);
 
         res.status(500);
-        res.send("Error commiting to db.");
-        await client.query('ROLLBACK')
+        res.send('Error commiting to db.');
+        await client.query('ROLLBACK');
     }
-
-
-
 });
 
 app.get('/api/validateToken', async (req, res) => {
-  if (!req.query.token) {
-    res.status(422);
-    res.send("Token parameter must be specifed.")
-    return
-  }
-
-  const result = await client.query({
-    text: 'SELECT teamid, teamname FROM team WHERE teamtoken = $1',
-    values: [req.query.token],
-  })
-
-  if (result.rowCount == 0) {
-      res.status(422);
-      res.send("Invalid token.")
-      return;
-  }
-
-  res.send({
-    "teamid" : result.rows[0].teamid,
-    "teamName" : result.rows[0].teamname
-  });
-
-});
-
-app.get('/api/readings', async (req, res) => {
-
-    queryText = 'SELECT * FROM reading JOIN team ON reading.teamid = team.teamid'
-
-    if (req.query.teamid) {
-        var TeamID = req.query.teamid;
-        queryText = "SELECT * FROM reading JOIN team on reading.teamid = team.teamid WHERE reading.teamid = " + TeamID
+    if (!req.query.token) {
+        res.status(422);
+        res.send('Token parameter must be specifed.');
+        return;
     }
 
     const result = await client.query({
-        text: queryText
-    })
+        text: 'SELECT teamid, teamname FROM team WHERE teamtoken = $1',
+        values: [req.query.token],
+    });
 
-    let response = new Array();
-    result.rows.forEach(function (reading) {
-        if (process.env.NODE_ENV == 'production' && reading.teamtoken == "TEST_TOKEN_FOR_TEST_TOKEN") {
+    if (result.rowCount === 0) {
+        res.status(422);
+        res.send('Invalid token.');
+        return;
+    }
+
+    res.send({
+        teamid: result.rows[0].teamid,
+        teamName: result.rows[0].teamname,
+    });
+});
+
+app.get('/api/readings', async (req, res) => {
+    let queryText = 'SELECT * FROM reading JOIN team ON reading.teamid = team.teamid';
+
+    if (req.query.teamid) {
+        const TeamID = req.query.teamid;
+        queryText = `SELECT * FROM reading JOIN team on reading.teamid = team.teamid WHERE reading.teamid = ${TeamID}`;
+    }
+
+    const result = await client.query({
+        text: queryText,
+    });
+
+    const response = [];
+    result.rows.forEach((reading) => {
+        if (process.env.NODE_ENV === 'production' && reading.teamtoken === 'TEST_TOKEN_FOR_TEST_TOKEN') {
             return;
         }
         response.push({
-            "teamid": reading.teamid,
-            "teamname": reading.teamname,
-            "reading": {
-                "cpm": reading.cpm,
-                "location": {
-                    "floor": reading.posfloor,
-                    "x": reading.posx,
-                    "y": reading.posy
-                }
-            }
-        })
+            teamid: reading.teamid,
+            teamname: reading.teamname,
+            reading: {
+                cpm: reading.cpm,
+                location: {
+                    floor: reading.posfloor,
+                    x: reading.posx,
+                    y: reading.posy,
+                },
+            },
+        });
     });
 
     res.send(response);
@@ -172,13 +178,13 @@ app.get('/api/readings', async (req, res) => {
 
 app.get('/record', (req, res) => {
     // Serve record.html
-    servePage(HTMLDir + 'record.html', res);
-})
+    servePage(`${HTMLDir}record.html`, res);
+});
 
 app.get('/validatetoken', (req, res) => {
-  servePage(HTMLDir+'validatetoken.html', res);
-})
+    servePage(`${HTMLDir}validatetoken.html`, res);
+});
 
 app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`)
-})
+    console.log(`Example app listening at http://localhost:${port}`);
+});
