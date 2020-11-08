@@ -73,11 +73,12 @@ app.post('/api/upload_data', async (req, res) => {
     // res.send (req.body); //---DEBUG---
 
     const result = await client.query({
-        text: 'SELECT TeamID FROM Team WHERE TeamToken = $1',
+        text: 'SELECT teamid FROM team WHERE teamtoken = $1',
         values: [token],
     })
 
     if (result.rowCount == 0) {
+        res.status(422);
         res.send("Invalid token.")
         return;
     }
@@ -90,16 +91,47 @@ app.post('/api/upload_data', async (req, res) => {
     try {
         await client.query('BEGIN')
         const response = await client.query(insertQuery, values)
+        console.log(response.rows[0])
+
+        res.status(201);
+
         res.send("Data submitted sucessfully. cpm: " + cpm + " floor: " + floor + " locX: " + locX + " locY: " + locY + "teamID: " + teamID);
         await client.query('COMMIT')
 
     } catch (err) {
         console.log(err.stack)
+
+        res.status(500);
         res.send("Error commiting to db.");
         await client.query('ROLLBACK')
     }
 
 
+
+});
+
+app.get('/api/validateToken', async (req, res) => {
+  if (!req.query.token) {
+    res.status(422);
+    res.send("Token parameter must be specifed.")
+    return
+  }
+
+  const result = await client.query({
+    text: 'SELECT teamid, teamname FROM team WHERE teamtoken = $1',
+    values: [req.query.token],
+  })
+
+  if (result.rowCount == 0) {
+      res.status(422);
+      res.send("Invalid token.")
+      return;
+  }
+
+  res.send({
+    "teamid" : result.rows[0].teamid,
+    "teamName" : result.rows[0].teamname
+  });
 
 });
 
@@ -141,6 +173,10 @@ app.get('/api/readings', async (req, res) => {
 app.get('/record', (req, res) => {
     // Serve record.html
     servePage(HTMLDir + 'record.html', res);
+})
+
+app.get('/validatetoken', (req, res) => {
+  servePage(HTMLDir+'validatetoken.html', res);
 })
 
 app.listen(port, () => {
