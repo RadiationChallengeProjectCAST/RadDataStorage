@@ -1,0 +1,9 @@
+*
+!pages
+!index.js
+!package.json
+!package-lock.json
+!setupDB.js
+!tokens.json
+!main.env
+!init.sql

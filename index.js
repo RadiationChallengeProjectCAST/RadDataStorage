@@ -4,7 +4,6 @@ dotenv.config();
 
 const fs = require('fs');
 
-const tokens = JSON.parse(fs.readFileSync('tokens.json', 'utf8'));
 const replicationRemotes = JSON.parse(fs.readFileSync('replication.json', 'utf8'));
 
 const express = require('express');
@@ -23,16 +22,19 @@ console.log(process.env.NODE_ENV);
 const { Pool } = require('pg');
 
 const client = new Pool({
-    user: tokens.DBUserName,
-    host: 'localhost',
-    database: tokens.DBName,
-    password: tokens.DBUserPassword,
-    port: '5432',
+    user: process.env.POSTGRES_USER,
+    host: process.env.HOST_POSTGRES || 'localhost',
+    database: process.env.POSTGRES_DB,
+    password: process.env.POSTGRES_PASSWORD,
+    port: process.env.PORT_POSTGRES || '5432',
 });
 
 client.connect();
 
 const axios = require('axios');
+const { setupTeamsTokens } = require('./setupDB.js');
+
+setupTeamsTokens(client);
 
 function servePage(path, res) {
     fs.readFile(path, (err, data) => {
@@ -102,8 +104,7 @@ app.post('/api/upload_data', async (req, res) => {
 
     try {
         await client.query('BEGIN');
-        const response = await client.query(insertQuery, values);
-        console.log(response.rows[0]);
+        await client.query(insertQuery, values);
 
         res.status(201);
 

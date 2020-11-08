@@ -118,3 +118,4 @@ dist
 tokens.json
 tokensRemote.json
 replication.json
+db/
