@@ -10,17 +10,20 @@
 
 <body>
     <section class="section">
-        <div class="container">
-            <h1 class="title">Validate Token</h1>
+        <div class="container is-max-desktop">
+            <h1 class="title">Token Validation Form</h1>
             <form action="/api/validateToken" method="GET">
                 <div class="field">
-                    <label class="label">Token:</label>
+                    <label class="label">Token</label>
                     <div class="control">
-                        <input class="input" id="token" name="token" type="text">
+                        <input class="input" placeholder="String input" id="token" name="token" type="text">
                     </div>
+                </div>
+                <div class="field">
                     <div class="control">
                         <button class="button is-primary" type="submit" value="Submit">Submit</button>
                     </div>
+                </div>
             </form>
         </div>
     </section>
