@@ -155,6 +155,10 @@ app.get('/record', (req, res) => {
     servePage(HTMLDir+'record.html', res);
 })
 
+app.get('/validatetoken', (req, res) => {
+  servePage(HTMLDir+'validatetoken.html', res);
+})
+
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
 })
