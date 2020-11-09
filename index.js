@@ -42,6 +42,15 @@ function servePage(path, res) {
     });
 }
 
+function validToken(token){
+    const result = await client.query({
+        text: 'SELECT teamid FROM team WHERE teamtoken = $1',
+        values: [token],
+    });
+    if (result.rowCount === 0) {return false;}
+    else {return true;}
+};
+
 app.post('/api/upload_data', async (req, res) => {
     console.log('Received Reading POST');
 
@@ -84,12 +93,8 @@ app.post('/api/upload_data', async (req, res) => {
     // res.send (token + " | " + cpm + " | " + floor + " | " + locX + " | " + locY); //---DEBUG---
     // res.send (req.body); //---DEBUG---
 
-    const result = await client.query({
-        text: 'SELECT teamid FROM team WHERE teamtoken = $1',
-        values: [token],
-    });
 
-    if (result.rowCount === 0) {
+    if (!validToken(token)) {
         res.status(422);
         res.send('Invalid token.');
         return;
