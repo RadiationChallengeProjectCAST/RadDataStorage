@@ -13,3 +13,4 @@ jobs:
           node-version: "12.x"
       - run: npm install
       - run: npm run lint
+      - run: docker-compose run --service-ports --rm backend npm run test
