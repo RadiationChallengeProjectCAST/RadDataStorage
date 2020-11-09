@@ -118,6 +118,20 @@ app.post('/api/upload_data', async (req, res) => {
     }
 });
 
+app.post('/api/deleteReading', async (req, res) =>{
+    //Token varification
+    
+    //TODO: Sanatise inputs! (especially for this one)
+
+    //SELECT reading
+
+    //check token is correct
+
+    //TODO: check for admin token as alternitve
+
+    //UPDATE isDeleted field
+});
+
 app.get('/api/validateToken', async (req, res) => {
     if (!req.query.token) {
         res.status(422);
