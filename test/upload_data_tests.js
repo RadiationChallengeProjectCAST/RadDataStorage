@@ -17,7 +17,7 @@ describe('POST upload_data tests', () => {
                         },
                     },
                 })
-                .expect(201, done);
+                .expect(200, done);
         });
     });
 });
