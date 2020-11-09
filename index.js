@@ -42,13 +42,12 @@ function servePage(path, res) {
     });
 }
 
-function validToken(token){
+async function validToken(token){
     const result = await client.query({
         text: 'SELECT teamid FROM team WHERE teamtoken = $1',
         values: [token],
     });
-    if (result.rowCount === 0) {return false;}
-    else {return true;}
+    return !result.rowCount === 0;
 };
 
 app.post('/api/upload_data', async (req, res) => {
