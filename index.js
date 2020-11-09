@@ -47,7 +47,11 @@ async function validToken(token){
         text: 'SELECT teamid FROM team WHERE teamtoken = $1',
         values: [token],
     });
-    return !result.rowCount === 0;
+    if (!result.rowCount === 0) {
+        return result[0].token;
+    }
+    else {return null;}
+    //Andrey registers discontent (unrelated)
 };
 
 app.post('/api/upload_data', async (req, res) => {
@@ -92,14 +96,14 @@ app.post('/api/upload_data', async (req, res) => {
     // res.send (token + " | " + cpm + " | " + floor + " | " + locX + " | " + locY); //---DEBUG---
     // res.send (req.body); //---DEBUG---
 
-
-    if (!validToken(token)) {
+    const TeamID = validateToken(token);
+    
+    if (!TeamID) {
         res.status(422);
         res.send('Invalid token.');
         return;
     }
 
-    const teamID = result.rows[0].teamid;
 
     const insertQuery = 'INSERT INTO reading (teamid, posfloor, posx, posy, cpm) VALUES ($1, $2, $3, $4, $5);';
     const values = [teamID, floor, locX, locY, cpm];
