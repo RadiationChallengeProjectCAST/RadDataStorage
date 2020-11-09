@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "test": "mocha",
+        "test": "mocha --exit",
         "lint": "eslint --ext .js,.jsx .",
         "lint:fix": "eslint --fix --ext .js,.jsx .",
         "pretest": "./node_modules/.bin/eslint --ignore-path .gitignore . --fix"
