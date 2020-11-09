@@ -7,3 +7,4 @@
 !tokens.json
 !main.env
 !init.sql
+!wait-for-db.sh

@@ -18,6 +18,7 @@ services:
       - HOST_POSTGRES=db
     volumes:
       - .:/home/app/backend
+    command: ["./wait-for-db.sh", "node",  "index.js"]
     ports:
       - "3000:3000"
     depends_on:
