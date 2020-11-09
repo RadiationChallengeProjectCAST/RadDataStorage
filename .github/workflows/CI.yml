@@ -11,7 +11,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: "12.x"
-      - run: cp -a /CIConfigFiles/. .
+      - run: ls
+      - run: cp -a ./CIConfigFiles/. .
       - run: npm install
       - run: npm run lint
       - run: docker-compose run --service-ports --rm backend npm run test
