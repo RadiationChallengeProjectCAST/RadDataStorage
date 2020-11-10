@@ -18,21 +18,14 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 console.log(process.env.NODE_ENV);
+const axios = require('axios');
 
-const { Pool } = require('pg');
+const { CreatePool } = require('./utils/db_utils.js');
 
-const client = new Pool({
-    user: process.env.POSTGRES_USER,
-    host: process.env.HOST_POSTGRES || 'localhost',
-    database: process.env.POSTGRES_DB,
-    password: process.env.POSTGRES_PASSWORD,
-    port: process.env.PORT_POSTGRES || '5432',
-});
-
+const client = CreatePool();
 client.connect();
 
-const axios = require('axios');
-const { setupTeamsTokens } = require('./setupDB.js');
+const { setupTeamsTokens } = require('./utils/setupDB.js');
 
 setupTeamsTokens(client);
 
@@ -111,7 +104,7 @@ app.post('/api/upload_data', async (req, res) => {
         res.send(`Data submitted sucessfully. cpm: ${cpm} floor: ${floor} locX: ${locX} locY: ${locY}teamID: ${teamID}`);
         await client.query('COMMIT');
     } catch (err) {
-        console.log(err.stack);
+        console.log(err);
 
         res.status(500);
         res.send('Error commiting to db.');
@@ -190,4 +183,4 @@ app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
 });
 
-module.exports.app = app;
+exports.app = app;

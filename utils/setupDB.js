@@ -4,17 +4,11 @@ const tokens = JSON.parse(fs.readFileSync('tokens.json', 'utf8'));
 
 const dotenv = require('dotenv');
 
-dotenv.config();
+dotenv.config('..');
 
-const { Pool } = require('pg');
+const { CreatePool } = require('./db_utils.js');
 
-const pool = new Pool({
-    user: process.env.POSTGRES_USER,
-    host: process.env.HOST_POSTGRES || 'localhost',
-    database: process.env.POSTGRES_DB,
-    password: process.env.POSTGRES_PASSWORD,
-    port: process.env.PORT_POSTGRES || '5432',
-});
+const pool = CreatePool();
 
 pool.connect();
 
@@ -46,4 +40,4 @@ setTimeout(() => {
     setupTeamsTokens(pool);
 }, 3000);
 
-module.exports.setupTeamsTokens = setupTeamsTokens;
+exports.setupTeamsTokens = setupTeamsTokens;

@@ -4,7 +4,8 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "test": "mocha --exit",
+        "test": "docker-compose run --service-ports --rm backend npm run test:no-docker",
+        "test:no-docker": "mocha --exit",
         "lint": "eslint --ext .js,.jsx .",
         "lint:fix": "eslint --fix --ext .js,.jsx .",
         "pretest": "./node_modules/.bin/eslint --ignore-path .gitignore . --fix"
@@ -12,6 +13,7 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "async": "^3.2.0",
         "axios": "^0.21.0",
         "body-parser": "^1.19.0",
         "bulma": "^0.9.1",

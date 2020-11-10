@@ -13,7 +13,7 @@ CREATE TABLE reading (
 
 CREATE TABLE team (
     teamid SERIAL PRIMARY KEY,
-    teamtoken VARCHAR(32),
+    teamtoken VARCHAR(32) UNIQUE,
     teamname VARCHAR(32)
 );
 
