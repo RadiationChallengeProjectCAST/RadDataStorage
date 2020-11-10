@@ -34,6 +34,12 @@ Please make sure ESLint extension is installed before commiting/opening a pull r
         "teamName": "TEST_GROUP_IGNORE_RESULTS",
         "token": "TEST_TOKEN_FOR_TEST_TOKEN"
         },
+        {
+        "teamId": 1,
+        "teamName": "TEST_GROUP_IGNORE_RESULTS_2",
+        "token": "TEST_TOKEN_FOR_TEST_TOKEN_2",
+        "test": true
+        },
         ...
         ]
     }
