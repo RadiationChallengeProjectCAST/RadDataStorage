@@ -8,7 +8,7 @@
         "test:no-docker": "mocha --exit",
         "lint": "eslint --ext .js,.jsx .",
         "lint:fix": "eslint --fix --ext .js,.jsx .",
-        "pretest": "./node_modules/.bin/eslint --ignore-path .gitignore . --fix"
+        "pretest": "./node_modules/.bin/eslint --ignore-path .gitignore ."
     },
     "author": "",
     "license": "ISC",
