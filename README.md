@@ -4,16 +4,9 @@
 
 Please make sure ESLint extension is installed before commiting/opening a pull request.
 
-## Dev requirements
-### Required
-- Node.js
-- Git
-### Optional
-- Docker (no postgresql required)
-- Postgresql
+## Installation
 
-## Installation 
-1. Clone repo
+1. Clone this repo
 
     `git clone https://github.com/RadiationChallengeProjectCAST/RadDataStorage.git`
 2. Run `npm install`
@@ -25,7 +18,9 @@ Please make sure ESLint extension is installed before commiting/opening a pull r
     POSTGRES_USER = raddbaccess
     POSTGRES_PASSWORD = INSERT_POSTGRES_PASSWORD_HERE
     ```
+
 4. Create `tokens.json` with format
+
     ```json
     {
     "teams": [
@@ -44,7 +39,9 @@ Please make sure ESLint extension is installed before commiting/opening a pull r
         ]
     }
     ```
+
 5. Create `replication.json` with format
+
     ```json
     [
         {
@@ -54,12 +51,22 @@ Please make sure ESLint extension is installed before commiting/opening a pull r
     ]
     ```
 
-### Option 1: Docker (easier)
-1. Run `docker-compose up` to start docker containers. 
+## Running the code
 
-    Allow through firewall. Should launch server with postgres on `localhost:3000`.
+### Option 1: Set up the environment
 
-### Option 2: Manually setup postgresql on machine
-1. Install postgresql.
-2. Create role and database using commands in SQLSpecification.sql. Make sure to **change password**.
+1. Install the following software
+
+    - Node.js
+    - Postgresql
+
+2. Create a role and database using commands in SQLSpecification.sql. Make sure to **change the password**.
 3. Launch application with `node index.js`
+
+### Option 2: Running inside a container
+
+1. Install `docker`
+
+2. Run `docker-compose up` to start docker containers.
+
+    Make sure to allow through firewall.
