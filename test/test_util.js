@@ -33,9 +33,15 @@ function UploadReading(cb, app, token, random) {
                         'y': random ? getRandomInt(0, 100) : 1,
                     },
                 },
-            }).end(() => {
+            }).end((err) => {
+                if (err) {
+                    console.log(err);
+                    cb(err);
+                }
                 cb();
             });
+    } else {
+        cb('Bad token. Check if running in production');
     }
 }
 
@@ -57,7 +63,7 @@ function DeleteAllTestReading(done) {
                 throw e;
             });
     }).catch((e) => {
-        console.error(e.stack);
+        console.error(e);
         client.query({ text: 'ROLLBACK;' });
     });
 }

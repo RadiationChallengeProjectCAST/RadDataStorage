@@ -25,6 +25,7 @@ describe('GET api/readings', () => {
                         .expect(200)
                         .end((err, res) => {
                             if (err) {
+                                console.log(err);
                                 return cb(err);
                             }
                             expect(res.body).to.be.length(3);
@@ -32,7 +33,7 @@ describe('GET api/readings', () => {
                         });
                 },
             ], done);
-        });
+        }).timeout(10000);
         it('should return filtered json with 3 results', (done) => {
             // Async test series https://stackoverflow.com/a/25945659
             let teamid1;

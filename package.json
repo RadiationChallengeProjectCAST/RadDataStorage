@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "test": "docker-compose run --service-ports --rm backend npm run test:no-docker",
+        "test": "docker-compose build && docker-compose run --service-ports --rm backend npm run test:no-docker",
         "test:no-docker": "mocha --exit",
         "lint": "eslint --ext .js,.jsx .",
         "lint:fix": "eslint --fix --ext .js,.jsx .",

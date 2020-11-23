@@ -12,12 +12,11 @@ services:
       - "5432:5432"
   backend:
     build: .
-    working_dir: /home/app/backend
     environment:
       - PORT_POSTGRES=5432
       - HOST_POSTGRES=db
     volumes:
-      - .:/home/app/backend
+      - ./backend:/home/app/backend
     command: ["./wait-for-db.sh", "node",  "index.js"]
     ports:
       - "3000:3000"
