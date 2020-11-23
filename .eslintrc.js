@@ -15,6 +15,7 @@ module.exports = {
         'indent': ['error', 4],
         'quote-props': ['error', 'consistent'],
         'no-console': 'off',
+        'linebreak-style': 0,
         'no-restricted-syntax': [
             'error',
             {
