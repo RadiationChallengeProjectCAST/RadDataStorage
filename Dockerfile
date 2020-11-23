@@ -6,4 +6,4 @@ RUN chmod +x wait-for-db.sh
 RUN npm install
 # copy over the rest of the source code
 EXPOSE 3000
-CMD [ "node", "index.js" ] # run the app in production
+CMD ["./wait-for-db.sh", "node", "index.js" ] # run the app in production
