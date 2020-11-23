@@ -26,10 +26,10 @@ describe('GET api/readings', () => {
                         .end((err, res) => {
                             if (err) {
                                 console.log(err);
-                                return cb(err);
+                                cb(err);
                             }
                             expect(res.body).to.be.length(3);
-                            return cb();
+                            cb();
                         });
                 },
             ], done);
@@ -71,10 +71,10 @@ describe('GET api/readings', () => {
                         .expect(200)
                         .end((err, res) => {
                             if (err) {
-                                return cb(err);
+                                cb(err);
                             }
                             expect(res.body).to.be.length(3);
-                            return cb();
+                            cb();
                         });
                 },
                 (cb) => {
@@ -85,10 +85,10 @@ describe('GET api/readings', () => {
                         .expect(200)
                         .end((err, res) => {
                             if (err) {
-                                return cb(err);
+                                cb(err);
                             }
                             expect(res.body).to.be.length(1);
-                            return cb();
+                            cb();
                         });
                 },
             ], done);

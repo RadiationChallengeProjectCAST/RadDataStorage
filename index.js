@@ -98,11 +98,10 @@ app.post('/api/upload_data', async (req, res) => {
     try {
         await client.query('BEGIN');
         await client.query(insertQuery, values);
-
+        await client.query('COMMIT');
         res.status(201);
 
         res.send(`Data submitted sucessfully. cpm: ${cpm} floor: ${floor} locX: ${locX} locY: ${locY}teamID: ${teamID}`);
-        await client.query('COMMIT');
     } catch (err) {
         console.log(err);
 
