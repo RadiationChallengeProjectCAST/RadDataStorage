@@ -115,6 +115,8 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-tokens.json
-tokensRemote.json
-replication.json
+/tokens.json
+/tokensRemote.json
+/replication.json
+!CIConfigFiles/.env
+db/

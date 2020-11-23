@@ -4,7 +4,6 @@ dotenv.config();
 
 const fs = require('fs');
 
-const tokens = JSON.parse(fs.readFileSync('tokens.json', 'utf8'));
 const replicationRemotes = JSON.parse(fs.readFileSync('replication.json', 'utf8'));
 
 const express = require('express');
@@ -19,20 +18,16 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 console.log(process.env.NODE_ENV);
+const axios = require('axios');
 
-const { Pool } = require('pg');
+const { CreatePool } = require('./utils/db_utils.js');
 
-const client = new Pool({
-    user: tokens.DBUserName,
-    host: 'localhost',
-    database: tokens.DBName,
-    password: tokens.DBUserPassword,
-    port: '5432',
-});
-
+const client = CreatePool();
 client.connect();
 
-const axios = require('axios');
+const { setupTeamsTokens } = require('./utils/setupDB.js');
+
+setupTeamsTokens(client);
 
 function servePage(path, res) {
     fs.readFile(path, (err, data) => {
@@ -102,15 +97,13 @@ app.post('/api/upload_data', async (req, res) => {
 
     try {
         await client.query('BEGIN');
-        const response = await client.query(insertQuery, values);
-        console.log(response.rows[0]);
-
+        await client.query(insertQuery, values);
+        await client.query('COMMIT');
         res.status(201);
 
         res.send(`Data submitted sucessfully. cpm: ${cpm} floor: ${floor} locX: ${locX} locY: ${locY}teamID: ${teamID}`);
-        await client.query('COMMIT');
     } catch (err) {
-        console.log(err.stack);
+        console.log(err);
 
         res.status(500);
         res.send('Error commiting to db.');
@@ -188,3 +181,5 @@ app.get('/validatetoken', (req, res) => {
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
 });
+
+exports.app = app;

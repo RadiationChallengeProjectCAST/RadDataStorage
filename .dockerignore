@@ -1,0 +1,13 @@
+*
+!pages
+!utils
+!test
+!index.js
+!package.json
+!package-lock.json
+!setupDB.js
+!tokens.json
+!.env
+!replication.json
+!init.sql
+!wait-for-db.sh
