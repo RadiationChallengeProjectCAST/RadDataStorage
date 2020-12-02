@@ -105,9 +105,9 @@ app.post('/api/upload_data', async (req, res) => {
     } catch (err) {
         console.log(err);
 
+        await client.query('ROLLBACK');
         res.status(500);
         res.send('Error commiting to db.');
-        await client.query('ROLLBACK');
     }
 });
 
