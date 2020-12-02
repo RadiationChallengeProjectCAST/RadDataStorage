@@ -8,9 +8,9 @@ Please make sure ESLint extension is installed before commiting/opening a pull r
 
 1. Clone this repo
 
-    `git clone https://github.com/RadiationChallengeProjectCAST/RadDataStorage.git`
-2. Run `npm install`
-3. Create `.env` with correct enviroment varibles set
+    Run in terminal: `git clone https://github.com/RadiationChallengeProjectCAST/RadDataStorage.git`
+2. Run in terminal: `npm install`
+3. Create `.env` file with correct enviroment varibles set
 
     ```
     NODE_ENV = development
@@ -66,8 +66,8 @@ Please make sure ESLint extension is installed before commiting/opening a pull r
 
 ### Option 2: Running inside a container
 
-1. Install `docker`
+1. Install [Docker](https://www.docker.com/get-started)
 
-2. Run `docker-compose up` to start docker containers.
+2. Run in terminal `docker-compose up` to start docker containers.
 
     Make sure to allow through firewall.
