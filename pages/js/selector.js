@@ -1,9 +1,14 @@
-window.onload = function () {
-    const c = document.getElementById('imageCanvas');
-    const ctx = c.getContext('2d');
-    const img = new Image();
-    img.onload = function () {
-        ctx.drawImage(img, 0, 0, img.width, img.height, // source rectangle
+let c;
+let ctx;
+const img = new Image();
+
+const floorselect = document.getElementById('floors');
+
+window.onload = () => {
+    c = document.getElementById('imageCanvas');
+    ctx = c.getContext('2d');
+    img.onload = () => {
+        ctx.drawImage(img, 0, 0, img.width, img.height,
             0, 0, c.width, c.height);
     };
     img.src = 'assets/sample.jpeg';
@@ -18,7 +23,15 @@ function getCursorPosition(canvas, event) {
 
     xinput.value = x;
     yinput.value = Math.floor(y);
-    console.log(`x: ${x} y: ${y}`);
+}
+// eslint-disable-next-line no-unused-vars
+function updatefloorImg() {
+    console.log('hello');
+    console.log(floorselect);
+    img.src = `assets/${floorselect.value}.png`;
+    console.log(img.src);
+    ctx.drawImage(img, 0, 0, img.width, img.height,
+        0, 0, c.width, c.height);
 }
 
 const canvas = document.getElementById('imageCanvas');
