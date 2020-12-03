@@ -8,16 +8,15 @@ describe('POST upload_data tests', () => {
                 .post('/api/upload_data')
                 .send({
                     'token': 'TEST_TOKEN_FOR_TEST_TOKEN',
-                    'reading': {
-                        'cpm': 10000,
-                        'location': {
-                            'floor': 4,
-                            'x': 55,
-                            'y': 1,
-                        },
-                    },
+                    'cpm': 10000,
+                    'floor': 4,
+                    'x': 55,
+                    'y': 1,
                 })
-                .expect(201, done);
+                .expect('Content-Type', /json/)
+                .expect(201, {
+                    success: true,
+                }, done);
         });
     });
     describe('POST json invalid token', () => {
@@ -26,17 +25,19 @@ describe('POST upload_data tests', () => {
                 .post('/api/upload_data')
                 .send({
                     'token': 'TEST_TOKEN_FOR_TEST_TOKEN_INVALID',
-                    'reading': {
-                        'cpm': 10000,
-                        'location': {
-                            'floor': 4,
-                            'x': 55,
-                            'y': 1,
-                        },
-                    },
+                    'cpm': 10000,
+                    'floor': 4,
+                    'x': 55,
+                    'y': 1,
                 })
-                .expect('Invalid token.')
-                .expect(422, done);
+                .expect('Content-Type', /json/)
+                .expect(422, {
+                    success: false,
+                    errors: [{
+                        code: 102,
+                        message: 'Invalid token.',
+                    }],
+                }, done);
         });
     });
     describe('POST json missing token', () => {
@@ -44,17 +45,21 @@ describe('POST upload_data tests', () => {
             request(app)
                 .post('/api/upload_data')
                 .send({
-                    'reading': {
-                        'cpm': 10000,
-                        'location': {
-                            'floor': 4,
-                            'x': 55,
-                            'y': 1,
-                        },
-                    },
+                    'cpm': 10000,
+                    'floor': 4,
+                    'x': 55,
+                    'y': 1,
                 })
-                .expect('Invalid token.')
-                .expect(422, done);
+                .expect('Content-Type', /json/)
+                .expect(422, {
+                    success: false,
+                    errors: [
+                        {
+                            code: 101,
+                            message: 'token parameter is missing or is invalid.',
+                        },
+                    ],
+                }, done);
         });
     });
 });
