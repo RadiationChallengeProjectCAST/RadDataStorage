@@ -10,7 +10,6 @@ const express = require('express');
 
 const app = express();
 const port = process.env.port || 3000;
-const HTMLDir = 'pages/';
 
 const bodyParser = require('body-parser');
 
@@ -29,13 +28,7 @@ const { setupTeamsTokens } = require('./utils/setupDB.js');
 
 setupTeamsTokens(client);
 
-function servePage(path, res) {
-    fs.readFile(path, (err, data) => {
-        res.writeHead(200, { 'Content-Type': 'text/html' });
-        res.write(data);
-        res.end();
-    });
-}
+app.use(express.static('pages'));
 
 app.post('/api/upload_data', async (req, res) => {
     console.log('Received Reading POST');
@@ -167,15 +160,6 @@ app.get('/api/readings', async (req, res) => {
     });
 
     res.send(response);
-});
-
-app.get('/record', (req, res) => {
-    // Serve record.html
-    servePage(`${HTMLDir}record.html`, res);
-});
-
-app.get('/validatetoken', (req, res) => {
-    servePage(`${HTMLDir}validatetoken.html`, res);
 });
 
 app.listen(port, () => {
