@@ -1,33 +1,44 @@
 # API Documentation
 [*Short intro here*]
-## Upload Data (JSON) `POST`
+
+### Upload Data `POST`
 Url: `api/upload_data`
+
+Used for uploading a radiation reading.
+
 ```
 code example here
 ```
-### JSON Object
+#### Arguments
+##### token
+Your team's 32 character {?} token. Required for authentication. Don't share this token with anyone else.
+##### cpm
+Count Per Minute.
+##### floor
+The floor the reading took place on, from 1 (ground floor) to 4 (roof)
+##### x
+The x coordinate of the location of the reading, measured from the learning plaza corner of the building (shown as top left on our selector)
+##### y
+The y coordinate of the location of the reading, measured from the learning plaza corner of the building (shown as top left on our selector)
 
-## Upload Data (Arguments (?) ) `POST`
-Url: `api/upload_data`
-```
-code example here
-```
-### Arguments
-
-## Request Readings Data (Arguments (?) ) `GET`
+### Request Readings Data `GET`
 Url: `api/readings`
+
+DESCRIPTION HERE
 ```
 code example here
 ```
-### Arguments
+#### Arguments
+##### teamid `OPTIONAL`
 
-
-## Validate Token (Arguments (?) ) `GET`
+### Validate Token `GET`
 Url: `api/validateToken`
+
+DESCRIPTION HERE
 ```
 code example here
 ```
-### Arguments
+#### Arguments
+##### token
 
 # NOTES, TODO ETC.
-* I don't know what to call post key/value pairs, I've put 'arguments (?)' as a placeholder in the title of each api function but it needs renaming -Thomas
