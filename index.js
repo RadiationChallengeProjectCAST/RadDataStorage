@@ -30,7 +30,7 @@ const { setupTeamsTokens } = require('./utils/setupDB.js');
 
 setupTeamsTokens(client);
 
-app.use(express.static('pages'));
+app.use(express.static('pages', { extensions: ['html'] }));
 
 app.post('/api/upload_data', [
     body('token').notEmpty(),
