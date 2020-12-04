@@ -75,7 +75,7 @@ app.post('/api/upload_data', [
     const teamID = result.rows[0].teamid;
 
     const insertQuery = 'INSERT INTO reading (teamid, posfloor, posx, posy, cpm) VALUES ($1, $2, $3, $4, $5);';
-    const values = [teamID, req.body.floor, req.body.locX, req.body.locY, req.body.cpm];
+    const values = [teamID, req.body.floor, req.body.x, req.body.y, req.body.cpm];
 
     try {
         await client.query('BEGIN');
