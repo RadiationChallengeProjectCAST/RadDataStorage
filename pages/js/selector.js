@@ -6,10 +6,13 @@ const floorselect = document.getElementById('floors');
 
 window.onload = () => {
     c = document.getElementById('imageCanvas');
+    c.width = window.innerWidth - 100;
+    c.height = window.innerHeight - 10;
     ctx = c.getContext('2d');
     img.onload = () => {
         ctx.drawImage(img, 0, 0, img.width, img.height,
             0, 0, c.width, c.height);
+        ctx.imageSmoothingEnabled = false;
     };
     img.src = 'assets/sample.jpeg';
 };
