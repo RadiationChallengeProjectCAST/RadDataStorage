@@ -30,14 +30,14 @@ const { setupTeamsTokens } = require('./utils/setupDB.js');
 
 setupTeamsTokens(client);
 
-app.use(express.static('pages'));
+app.use(express.static('pages', { extensions: ['html'] }));
 
 app.post('/api/upload_data', [
     body('token').notEmpty(),
     body('floor').isInt({ min: 1, max: 4 }),
-    body('cpm').isFloat(),
-    body('x').isFloat(),
-    body('y').isFloat(),
+    body('cpm').isFloat({ min: 0 }),
+    body('x').isFloat({ min: 0 }),
+    body('y').isFloat({ min: 0 }),
 ], CheckValidation, async (req, res) => {
     // Replicates request to other servers specifed in replication.json
     if (req.body.replicated !== true) {
