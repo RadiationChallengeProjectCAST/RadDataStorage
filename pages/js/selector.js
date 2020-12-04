@@ -40,8 +40,8 @@ function getCursorPosition(canvas, event) {
     const xinput = document.getElementById('inputX');
     const yinput = document.getElementById('inputY');
 
-    xinput.value = actX;
-    yinput.value = actY;
+    xinput.value = Math.floor(actX*100)/100;
+    yinput.value = Math.floor(actY*100)/100;
 }
 // eslint-disable-next-line no-unused-vars
 function updatefloorImg() {
