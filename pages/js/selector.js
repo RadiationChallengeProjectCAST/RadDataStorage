@@ -30,8 +30,8 @@ function getCursorPosition(canvas, event) {
     const relY = (y / canvas.height) * fullImgResY;
 
     // Find actual location
-    const actX = relX / AbsPixelsPerMeter;
-    const actY = relY / AbsPixelsPerMeter;
+    const actX = (relX / AbsPixelsPerMeter) - 2.07;
+    const actY = (relY / AbsPixelsPerMeter) - 2.71;
 
     // Output
     const xinput = document.getElementById('inputX');
