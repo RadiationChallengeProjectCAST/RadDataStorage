@@ -4,20 +4,15 @@ const img = new Image();
 
 const floorselect = document.getElementById('floors');
 
-window.onload = () => {
-    c = document.getElementById('imageCanvas');
-    c.width = window.innerWidth - 100;
-    c.height = window.innerHeight - 10;
-    ctx = c.getContext('2d');
-    img.onload = () => {
-        ctx.drawImage(img, 0, 0, img.width, img.height,
-            0, 0, c.width, c.height);
-        ctx.imageSmoothingEnabled = false;
-    };
-    img.src = 'assets/sample.jpeg';
-
-    updatefloorImg();
-};
+// eslint-disable-next-line no-unused-vars
+function updatefloorImg() {
+    console.log('hello');
+    console.log(floorselect);
+    img.src = `assets/${floorselect.value}.png`;
+    console.log(img.src);
+    ctx.drawImage(img, 0, 0, img.width, img.height,
+        0, 0, c.width, c.height);
+}
 
 function getCursorPosition(canvas, event) {
     // Consts
@@ -45,17 +40,23 @@ function getCursorPosition(canvas, event) {
     xinput.value = Math.floor(actX * 100) / 100;
     yinput.value = Math.floor(actY * 100) / 100;
 }
-// eslint-disable-next-line no-unused-vars
-function updatefloorImg() {
-    console.log('hello');
-    console.log(floorselect);
-    img.src = `assets/${floorselect.value}.png`;
-    console.log(img.src);
-    ctx.drawImage(img, 0, 0, img.width, img.height,
-        0, 0, c.width, c.height);
-}
 
 const canvas = document.getElementById('imageCanvas');
 canvas.addEventListener('mousedown', (e) => {
     getCursorPosition(canvas, e);
 });
+
+window.onload = () => {
+    c = document.getElementById('imageCanvas');
+    c.width = window.innerWidth - 100;
+    c.height = window.innerHeight - 10;
+    ctx = c.getContext('2d');
+    img.onload = () => {
+        ctx.drawImage(img, 0, 0, img.width, img.height,
+            0, 0, c.width, c.height);
+        ctx.imageSmoothingEnabled = false;
+    };
+    img.src = 'assets/sample.jpeg';
+
+    updatefloorImg();
+};
