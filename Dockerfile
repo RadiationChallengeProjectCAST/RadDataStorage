@@ -2,7 +2,7 @@ FROM node:12.12.0-alpine
 
 COPY . .
 RUN apk --no-cache add curl
-RUN chmod +x wait-for-db.sh
+RUN sed -i 's/\r$//' wait-for-db.sh  && chmod +x wait-for-db.sh
 RUN npm install
 # copy over the rest of the source code
 EXPOSE 3000

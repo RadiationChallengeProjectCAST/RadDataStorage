@@ -8,7 +8,7 @@ const fs = require('fs');
 
 const testTokens = JSON.parse(fs.readFileSync('./tokens.json', 'utf8')).teams.filter((el) => el.test);
 
-const { getRandomInt } = require('../utils/general_utils');
+const { GetRandomInt } = require('../utils/general_utils');
 
 const { CreatePool } = require('../utils/db_utils.js');
 
@@ -25,14 +25,10 @@ function UploadReading(cb, app, token, random) {
             .post('/api/upload_data')
             .send({
                 'token': token,
-                'reading': {
-                    'cpm': random ? getRandomInt(0, 1000) : 10000,
-                    'location': {
-                        'floor': random ? getRandomInt(0, 4) : 1,
-                        'x': random ? getRandomInt(0, 100) : 34,
-                        'y': random ? getRandomInt(0, 100) : 1,
-                    },
-                },
+                'cpm': random ? GetRandomInt(0, 1000) : 10000,
+                'floor': random ? GetRandomInt(1, 4) : 1,
+                'x': random ? GetRandomInt(0, 100) : 34,
+                'y': random ? GetRandomInt(0, 100) : 1,
             }).end((err) => {
                 if (err) {
                     console.log(err);

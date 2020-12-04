@@ -28,7 +28,8 @@ describe('GET api/readings', () => {
                                 console.log(err);
                                 cb(err);
                             }
-                            expect(res.body).to.be.length(3);
+                            expect(res.body.success);
+                            expect(res.body.readings).to.be.length(3);
                             cb();
                         });
                 },
@@ -73,7 +74,8 @@ describe('GET api/readings', () => {
                             if (err) {
                                 cb(err);
                             }
-                            expect(res.body).to.be.length(3);
+                            expect(res.body.success);
+                            expect(res.body.readings).to.be.length(3);
                             cb();
                         });
                 },
@@ -87,7 +89,8 @@ describe('GET api/readings', () => {
                             if (err) {
                                 cb(err);
                             }
-                            expect(res.body).to.be.length(1);
+                            expect(res.body.success);
+                            expect(res.body.readings).to.be.length(1);
                             cb();
                         });
                 },
