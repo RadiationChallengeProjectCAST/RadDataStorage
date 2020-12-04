@@ -18,14 +18,30 @@ window.onload = () => {
 };
 
 function getCursorPosition(canvas, event) {
+    //Consts
+    const fullImgResX = 1580;
+    const fullImgResY = 800;
+    const AbsPixelsPerMeter = 1000 / 20; // Meters / Pixels, if image was 100% size TODO: CHANGE ME!
+    
+    // Find position in image in pixels
     const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
+
+    // Find relative location (Position in pixels if image was 100% size)
+    const relX = x / canvas.width * fullImgResX;
+    const relY = y / canvas.height * fullImgResY;
+
+    // Find actual location
+    const actX = relX / AbsPixelsPerMeter;
+    const actY = relY / AbsPixelsPerMeter;
+    
+    // Output
     const xinput = document.getElementById('inputX');
     const yinput = document.getElementById('inputY');
 
-    xinput.value = x;
-    yinput.value = Math.floor(y);
+    xinput.value = actX;
+    yinput.value = actY;
 }
 // eslint-disable-next-line no-unused-vars
 function updatefloorImg() {
