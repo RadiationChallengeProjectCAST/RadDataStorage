@@ -15,6 +15,8 @@ window.onload = () => {
         ctx.imageSmoothingEnabled = false;
     };
     img.src = 'assets/sample.jpeg';
+
+    updatefloorImg();
 };
 
 function getCursorPosition(canvas, event) {
