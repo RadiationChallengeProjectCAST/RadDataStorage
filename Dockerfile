@@ -1,4 +1,4 @@
-FROM node:15.3.0-alpine
+FROM node:15.4.0-alpine
 
 COPY . .
 RUN apk --no-cache add curl
